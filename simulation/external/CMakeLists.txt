@@ -1,0 +1,7 @@
+add_subdirectory(box2d)
+add_subdirectory(imgui)
+add_subdirectory(json)
+add_subdirectory(raylib)
+add_subdirectory(rlimgui)
+add_subdirectory(uSockets)
+add_subdirectory(uWebSockets)

@@ -1,0 +1,53 @@
+# ---- build stage ----
+FROM ubuntu:24.04 AS build
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Build deps + tools needed for fetching and compiling
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    ca-certificates \
+    curl \
+    xz-utils \
+    zlib1g-dev \
+    # raylib/glfw build deps (configure-time)
+    libx11-dev \
+    libxrandr-dev \
+    libxinerama-dev \
+    libxcursor-dev \
+    libxi-dev \
+    libgl1-mesa-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+
+# Install CMake 4.2.3 (official prebuilt) without using pip/apt
+ARG CMAKE_VERSION=4.2.3
+RUN curl -fsSL -o /tmp/cmake.tar.gz \
+      https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz \
+ && mkdir -p /opt/cmake \
+ && tar -xzf /tmp/cmake.tar.gz -C /opt/cmake --strip-components=1 \
+ && rm -f /tmp/cmake.tar.gz
+
+ENV PATH="/opt/cmake/bin:${PATH}"
+
+WORKDIR /src
+COPY . /src
+
+RUN rm -rf build && cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
+ && cmake --build build --target SimulationServer -j
+
+# ---- runtime stage ----
+FROM ubuntu:24.04 AS runtime
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    zlib1g \
+    libstdc++6 \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY --from=build /src/build/SimulationServer /app/SimulationServer
+
+EXPOSE 3000
+CMD ["/app/SimulationServer"]
