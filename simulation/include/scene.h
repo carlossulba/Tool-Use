@@ -2,12 +2,9 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
-// #include <math.h>
 #include <vector>
 #include <algorithm>
 #include <iostream>
-// #include <stdio.h>
-// #include <unistd.h>
 
 #include "box2d/box2d.h"
 #include "nlohmann/json.hpp"
@@ -97,14 +94,14 @@ Scene create_scene(std::vector<SceneObject>& scene_objects, Tool& tool) {
     /*  Creates a Box2D world from the given scene objects and tool definition. 
         Returns a Scene structure.
     */
-   // 1. Initialize Box2D world
+   // Initialize Box2D world
     b2WorldDef worldDef = b2DefaultWorldDef();
     worldDef.gravity = {0.0f, PhysicsConfig::k_gravity};
     b2WorldId worldId = b2CreateWorld(&worldDef);
 
     Scene scene = {worldId, 60, 120, 4 };
 
-    // 2. Create Static Walls and Dynamic Balls
+    // Create Static Walls and Dynamic Balls
     for (const auto& obj : scene_objects) {
         b2BodyDef bodyDef = b2DefaultBodyDef();
         bodyDef.position = { obj.x, obj.y };
@@ -142,7 +139,7 @@ Scene create_scene(std::vector<SceneObject>& scene_objects, Tool& tool) {
         }
     }
 
-    // 3. Create Tool
+    // Create Tool
     b2BodyDef toolDef = b2DefaultBodyDef();
     toolDef.type = b2_dynamicBody;
     toolDef.position = { tool.x, tool.y };
@@ -196,7 +193,7 @@ Result simulate_scene(Scene& scene) {
     int steps = 0;
     int completion = 0;
 
-    // 
+    // Simulation Loop
     for (; steps < maxSteps; ++steps) {
         b2World_Step(scene.worldId, timeStep, scene.subStepCount);
         currentDistance = getDist();

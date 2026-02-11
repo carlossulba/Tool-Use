@@ -3,12 +3,8 @@
 #include <mutex>
 #include <chrono>
 #include <iomanip>
-// #include <vector>
-// #include <numeric>
-
 #include "App.h"
 #include "nlohmann/json.hpp"
-// #include "box2d/box2d.h"
 #include "scene.h"
 
 
@@ -47,8 +43,6 @@ void logResult(const Result& result, const Tool& tool) {
 }
 
 int main() {
-    // We create the app and then run it. 
-    // uWS::App is usually used as a fluent interface, but we need a reference to broadcast.
     auto app = uWS::App();
 
     app.ws<PerSocketData>("/*", {

@@ -1,17 +1,11 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
-// #include <math.h>
 #include <string>
 #include <vector>
-// #include <stdio.h>
-// #include <unistd.h>
 #include "raylib.h"
 #include "imgui.h"
 #include "rlImGui.h"
 #include "scene.h"
-// #include "box2d/id.h"
-// #include "box2d/math_functions.h"
-// #include "box2d/box2d.h"
 
 const std::string JSON_PATH = "last_scene.json";
 
